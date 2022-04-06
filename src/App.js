@@ -1,10 +1,11 @@
 import * as React from 'react';
 import {ThemeProvider,createTheme} from '@mui/material/styles';
-import { green, orange } from '@mui/material/colors';
 import { BrowserRouter as Router,Routes,Route, NavLink } from "react-router-dom";
-import Paper from '@mui/material/Paper';
 import Header from './Header';
-import NotFound from './NotFound'
+import NotFound from './NotFound';
+import Home from './Home';
+import Cursos from "./Cursos";
+import Curso from "./Curso";
 
 const theme = createTheme({
     palette: {
@@ -34,10 +35,11 @@ function App(props) {
             <Header></Header>
               <Router>
                   <Routes>
-                      <Route path={'/'} element={<p>a</p>}></Route>
-                      <Route path={'/cursos'} element={<p>b</p>}></Route>
-                      <Route path={'/contactos'} element={<p>c</p>}></Route>
-                      <Route path={'*'} element={<p><NotFound/></p>}></Route>
+                      <Route path={'/'} element={<Home/>}/>
+                      <Route path={'/cursos'} element={<Cursos/>}/>
+                      <Route path={'/contactos'} element={<p>c</p>}/>
+                      <Route path={'/cursos/:curso'} element={<p><Curso/></p>}/>
+                      <Route path={'*'} element={<p><NotFound/></p>}/>
                   </Routes>
               </Router>
           </ThemeProvider>
