@@ -6,6 +6,13 @@ import NotFound from './NotFound';
 import Home from './Home';
 import Cursos from "./Cursos";
 import Curso from "./Curso";
+import Contactos from "./Contactos";
+
+import cursos from './data/cursos.json'
+import disciplinas from './data/disciplinas.json'
+import Sobre from "./Sobre";
+
+
 
 const theme = createTheme({
     palette: {
@@ -28,23 +35,35 @@ const theme = createTheme({
 });
 
 
-function App(props) {
-  return (
-      <body>
-          <ThemeProvider theme={theme}>
-            <Header></Header>
-              <Router>
-                  <Routes>
-                      <Route path={'/'} element={<Home/>}/>
-                      <Route path={'/cursos'} element={<Cursos/>}/>
-                      <Route path={'/contactos'} element={<p>c</p>}/>
-                      <Route path={'/cursos/:curso'} element={<p><Curso/></p>}/>
-                      <Route path={'*'} element={<p><NotFound/></p>}/>
-                  </Routes>
-              </Router>
-          </ThemeProvider>
-      </body>
-  );
+class App extends React.Component{
+    constructor(props) {
+        super(props);
+
+        this.state={
+            cursos:cursos,
+            disciplinas:disciplinas
+        }
+    }
+
+    render() {
+        return (
+            <body>
+            <ThemeProvider theme={theme}>
+                <Header/>
+                <Router>
+                    <Routes>
+                        <Route path={'/'} element={<Home/>}/>
+                        <Route path={'/cursos'} element={<Cursos cursos={this.state.cursos}/>}/>
+                        <Route path={'/contactos'} element={<Contactos/>}/>
+                        <Route path={'/sobre'} element={<Sobre/>}/>
+                        <Route path={'/cursos/:curso'} element={<Curso disciplinas={this.state.disciplinas} cursos={this.state.cursos}/>}/>
+                        <Route path={'*'} element={<p><NotFound/></p>}/>
+                    </Routes>
+                </Router>
+            </ThemeProvider>
+            </body>
+        );
+    }
 }
 
 export default App;

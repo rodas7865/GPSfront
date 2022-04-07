@@ -1,13 +1,13 @@
 import * as React from 'react';
 import {Button, Box, CardMedia, CardContent, Card, Link, Paper, Typography} from "@mui/material";
 
-function Curso(props){
+function Contactos(props){
 
     return(
-        <Paper sx={{display:'flex', margin:'2%'}}>
-            <Typography variant={'h1'}> Exemplo de Texto</Typography>
+        <Paper sx={{margin:'2%',padding:'1%'}}>
+
         </Paper>
     )
 }
 
-export default Curso;
+export default Contactos;
