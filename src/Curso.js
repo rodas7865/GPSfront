@@ -7,7 +7,7 @@ const {curso} = useParams();
 
     return(
         <Paper sx={{display:'flex', margin:'2%'}}>
-            <Typography variant={'h1'}>Exemplo de Texto</Typography>
+            <Typography variant={'h1'}>{curso}</Typography>
         </Paper>
     )
 }

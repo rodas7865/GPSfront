@@ -1,17 +1,14 @@
 import * as React from 'react';
-import {ThemeProvider,createTheme} from '@mui/material/styles';
-import { BrowserRouter as Router,Routes,Route, NavLink } from "react-router-dom";
+import {ThemeProvider, createTheme} from '@mui/material/styles';
+import {BrowserRouter as Router, Routes, Route, NavLink} from "react-router-dom";
 import Header from './Header';
 import NotFound from './NotFound';
-import Home from './Home';
 import Cursos from "./Cursos";
 import Curso from "./Curso";
 import Contactos from "./Contactos";
 
-import cursos from './data/cursos.json'
 import disciplinas from './data/disciplinas.json'
 import Sobre from "./Sobre";
-
 
 
 const theme = createTheme({
@@ -35,15 +32,31 @@ const theme = createTheme({
 });
 
 
-class App extends React.Component{
+class App extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state={
-            cursos:cursos,
-            disciplinas:disciplinas
+        this.state = {
+            cursos: [],
+            disciplinas: disciplinas
         }
+
     }
+
+    componentDidMount() {
+       let cursos = this.getCursos()
+        this.setState({
+            cursos,
+        })
+    }
+
+    getCursos = async () => {
+        const data = await fetch("server/cursos");
+        const parsedData = await data.json();
+        return await parsedData;
+    }
+
+    get
 
     render() {
         return (
@@ -52,11 +65,11 @@ class App extends React.Component{
                 <Header/>
                 <Router>
                     <Routes>
-                        <Route path={'/'} element={<Home/>}/>
-                        <Route path={'/cursos'} element={<Cursos cursos={this.state.cursos}/>}/>
+                        <Route path={'/'} element={<Cursos cursos={this.getCursos}/>}/>
                         <Route path={'/contactos'} element={<Contactos/>}/>
                         <Route path={'/sobre'} element={<Sobre/>}/>
-                        <Route path={'/cursos/:curso'} element={<Curso disciplinas={this.state.disciplinas} cursos={this.state.cursos}/>}/>
+                        <Route path={'/cursos/:curso'}
+                               element={<Curso disciplinas={this.state.disciplinas} cursos={this.getCursos}/>}/>
                         <Route path={'*'} element={<p><NotFound/></p>}/>
                     </Routes>
                 </Router>

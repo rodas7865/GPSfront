@@ -15,11 +15,11 @@ function Header(props){
                         <Link href={'/'}><img src={'/logo.png'} width={'25%'}></img></Link>
                     </Box>
                     <Box sx={{margin:1, display: 'flex', align: 'center'}}>
-                        <Typography variant={'h6'} sx={{margin:2}}><Link href={'/cursos'} underline="none" color={'secondary'}>Cursos</Link> </Typography>
+                        <Typography variant={'h6'} sx={{margin:2}}><Link href={'/'} underline="none" color={'secondary'}>Cursos</Link> </Typography>
                         <Typography variant={'h6'} sx={{margin:2}}><Link href={'/contactos'} underline="none" color={'secondary'}>Contactos</Link> </Typography>
                         <Typography variant={'h6'} sx={{margin:2}}><Link href={'/sobre'} underline="none" color={'secondary'}>Sobre</Link> </Typography>
                     </Box>
-                </Toolbar>
+                    </Toolbar>
             </Container>
         </AppBar>
     )
