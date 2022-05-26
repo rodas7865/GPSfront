@@ -6,9 +6,10 @@ import NotFound from './NotFound';
 import Cursos from "./Cursos";
 import Curso from "./Curso";
 import Contactos from "./Contactos";
-
+import withRouter from "./withRouter";
 import disciplinas from './data/disciplinas.json'
 import Sobre from "./Sobre";
+import {compareArraysAsSet} from "@testing-library/jest-dom/dist/utils";
 
 
 const theme = createTheme({
@@ -56,7 +57,17 @@ class App extends React.Component {
         return await parsedData;
     }
 
-    get
+    getCurso = async  (id) => {
+        const data = await fetch('/server/cursos/'+id);
+        const parsedData = await data.json();
+        return await parsedData;
+    }
+
+    getCadeiras = async (id)=>{
+        const data = await fetch('/server/cadeiras/'+id);
+        const parsedData = await data.json();
+        return await parsedData;
+    }
 
     render() {
         return (
@@ -68,8 +79,8 @@ class App extends React.Component {
                         <Route path={'/'} element={<Cursos cursos={this.getCursos}/>}/>
                         <Route path={'/contactos'} element={<Contactos/>}/>
                         <Route path={'/sobre'} element={<Sobre/>}/>
-                        <Route path={'/cursos/:curso'}
-                               element={<Curso disciplinas={this.state.disciplinas} cursos={this.getCursos}/>}/>
+                        <Route path={'/:curso'}
+                               element={<Curso cadeiras={this.getCadeiras} curso={this.getCurso}/>}/>
                         <Route path={'*'} element={<p><NotFound/></p>}/>
                     </Routes>
                 </Router>
@@ -79,38 +90,4 @@ class App extends React.Component {
     }
 }
 
-export default App;
-
-/*
-import * as React from 'react';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Checkbox from '@mui/material/Checkbox';
-import { green, orange } from '@mui/material/colors';
-
-const outerTheme = createTheme({
-  palette: {
-    primary: {
-      main: orange[500],
-    },
-  },
-});
-
-const innerTheme = createTheme({
-  palette: {
-    primary: {
-      main: green[500],
-    },
-  },
-});
-
-export default function ThemeNesting() {
-  return (
-    <ThemeProvider theme={outerTheme}>
-      <Checkbox defaultChecked />
-      <ThemeProvider theme={innerTheme}>
-        <Checkbox defaultChecked />
-      </ThemeProvider>
-    </ThemeProvider>
-  );
-}
- */
+export default (App);

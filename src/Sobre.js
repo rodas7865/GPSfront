@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Button, Box, CardMedia, CardContent, Card, Link, Paper, Typography} from "@mui/material";
+import {Box, Typography} from "@mui/material";
 
 function Sobre(props) {
 
