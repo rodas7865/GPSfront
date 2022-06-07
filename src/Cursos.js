@@ -66,7 +66,7 @@ class Cursos extends React.Component {
                                 <div onMouseOver={() => this.handleMouseEnter(key)}
                                      onMouseOut={() => this.handleMouseOut(key)}>
                                     {(this.state.edit) ? (
-                                        <Link href={'/cursos/edit/' + result._id} underline="none">
+                                        <Link href={ 'edit/' + result._id} underline="none">
                                             <Card sx={{margin: '1%', padding: '5%', height: '15vw'}}>
                                                 <Box height={'10vw'}>
                                                     {(this.state.edit) ? (<Edit/>) : (<></>)}

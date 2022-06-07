@@ -7,7 +7,16 @@ import {
     Tab,
     Accordion,
     AccordionSummary,
-    AccordionDetails, Table, TableCell, TableRow, TableHead, TableBody, TextField, Button, Snackbar, Alert
+    AccordionDetails,
+    Table,
+    TableCell,
+    TableRow,
+    TableHead,
+    TableBody,
+    TextField,
+    Button,
+    Snackbar,
+    Alert
 } from "@mui/material";
 import withRouter from "./withRouter";
 import {Add} from "@mui/icons-material";
@@ -17,7 +26,7 @@ class Curso extends React.Component {
         super(props);
         this.state = {
             texto: [], curso: {}, selected: 0, cadeiras: [], email: "", mensagem: "",
-            emailError: false, mensagemError: false, showEmailError: false, showMessageError: false
+            emailError: false, mensagemError: false, showEmailError: false, showMessageError: false, showSucesso:false
         }
     }
 
@@ -65,11 +74,13 @@ class Curso extends React.Component {
 
     handlerSubmitForm = (e) => {
         e.preventDefault()
+        let flag=true;
         if (RegExp("^\s+$").test(this.state.email)||this.state.email===""){
             this.setState({
                 emailError:true,
                 showEmailError:true
             })
+            flag=false
         } else {
             this.setState({
                 emailError:false,
@@ -80,9 +91,26 @@ class Curso extends React.Component {
                 mensagemError:true,
                 showMessageError:true
             })
+            flag=false
         } else {
             this.setState({
                 mensagemError:false
+            })
+        }
+
+        if(flag) {
+            console.log('hi')
+            const body = {
+                email: this.state.email,
+                curso: this.state.curso.nome,
+                mensagem: this.state.mensagem
+            }
+
+            this.props.email(body).then((result) => {
+                console.log(result)
+                this.setState({
+                    showSucesso: true
+                })
             })
         }
     }
@@ -230,7 +258,6 @@ class Curso extends React.Component {
                                     label={"Email"}
                                     variant={'outlined'}
                                     type={'email'}
-                                    helperText={'O seu email'}
                                     onChange={(e) => {this.handlerChangeForm(e)}}
                                 />
                             </Box>
@@ -242,7 +269,7 @@ class Curso extends React.Component {
                                     multiline
                                     rows={10}
                                     sx={{width: '100%'}}
-                                    helperText={'O sua mensagem'}
+                                    helperText={'Uma copia da mensagem sera enviada para si.'}
                                     onChange={(e) => {this.handlerChangeForm(e)}}
                                 />
                             </Box>
@@ -271,6 +298,16 @@ class Curso extends React.Component {
             >
                 <Alert onClose={(e)=>{e.id='showEmailError';this.handlerClose(e)}} severity="error" sx={{ width: '100%' }}>
                     Email invalido!
+                </Alert>
+            </Snackbar>
+            <Snackbar
+                id={'showSucesso'}
+                open={this.state.showSucesso}
+                autoHideDuration={1000}
+                sx={{width:'25%'}}
+            >
+                <Alert onClose={(e)=>{e.id='showSucesso';this.handlerClose(e)}} severity="info" sx={{ width: '100%' }}>
+                    Email enviado!
                 </Alert>
             </Snackbar>
         </Paper>)

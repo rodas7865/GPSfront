@@ -5,11 +5,10 @@ import Header from './Header';
 import NotFound from './NotFound';
 import Cursos from "./Cursos";
 import Curso from "./Curso";
-import Contactos from "./Contactos";
-import withRouter from "./withRouter";
+import Cadeiras from "./Cadeiras";
 import disciplinas from './data/disciplinas.json'
 import Sobre from "./Sobre";
-import {compareArraysAsSet} from "@testing-library/jest-dom/dist/utils";
+import EditarCurso from "./EditarCurso";
 
 
 const theme = createTheme({
@@ -45,7 +44,7 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-       let cursos = this.getCursos()
+        let cursos = this.getCursos()
         this.setState({
             cursos,
         })
@@ -57,16 +56,120 @@ class App extends React.Component {
         return await parsedData;
     }
 
-    getCurso = async  (id) => {
-        const data = await fetch('/server/cursos/'+id);
+    getCurso = async (id) => {
+        const data = await fetch('/server/cursos/' + id);
         const parsedData = await data.json();
         return await parsedData;
     }
 
-    getCadeiras = async (id)=>{
-        const data = await fetch('/server/cadeiras/'+id);
+    getCadeira = async (id) => {
+        const data = await fetch('/server/cadeiras/' + id);
         const parsedData = await data.json();
         return await parsedData;
+    }
+
+    getCadeiras = async () => {
+        const data = await fetch('/server/cadeiras/');
+        const parsedData = await data.json();
+        return await parsedData;
+    }
+
+    sendEmail = async (body) => {
+        const data = await fetch('/server/email', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
+        return data;
+    }
+
+    updateCurso = async (id, body) => {
+        const data = await fetch('/server/cursos/' + id, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
+        const parsedData = await data.json();
+        return await parsedData;
+    }
+
+
+    updateCadeiras = (cadeirasUpdate) => {
+        let cadeiras = []
+        this.getCadeiras().then(
+            (result) => {
+                cadeiras = result
+                cadeiras.forEach((result)=>{
+                    let flag = cadeirasUpdate.some(object =>{
+                        return object.id===result._id
+                    })
+
+                    if(flag){
+                        const id = result.id
+                        const body = {
+                            "_id": result.id,
+                            "nome": result.nome,
+                            "ects": result.ects,
+                            "ht": result.ht,
+                            "htp": result.htp,
+                            "hpl": result.hpl
+                        }
+                        fetch('/server/cadeiras/' + id, {
+                            method: 'PATCH',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(body)
+                        }).then((result) => {
+                            console.log(result)
+                        })
+                    }else{
+                        const id = result._id
+                        console.log(result)
+                        fetch('/server/cadeiras/' + id, {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                        }).then((result) => {
+                            console.log(result)
+                        })
+                    }
+
+                })
+
+                cadeirasUpdate.forEach((result)=>{
+                    let flag = cadeiras.some(object =>{
+                        return object._id===result.id
+                    })
+
+                    console.log("CRIA? "+flag)
+
+                    if(flag===false){
+                        const body = {
+                            "nome": result.nome,
+                            "ects": result.ects,
+                            "ht": result.ht,
+                            "htp": result.htp,
+                            "hpl": result.hpl
+                        }
+
+                        fetch('/server/cadeiras/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(body)
+                        }).then((result) => {
+                            console.log(result)
+                        })
+                    }
+                })
+            })
     }
 
     render() {
@@ -77,10 +180,17 @@ class App extends React.Component {
                 <Router>
                     <Routes>
                         <Route path={'/'} element={<Cursos cursos={this.getCursos}/>}/>
-                        <Route path={'/contactos'} element={<Contactos/>}/>
                         <Route path={'/sobre'} element={<Sobre/>}/>
                         <Route path={'/:curso'}
-                               element={<Curso cadeiras={this.getCadeiras} curso={this.getCurso}/>}/>
+                               element={<Curso cadeiras={this.getCadeiras} curso={this.getCurso}
+                                               email={this.sendEmail}/>}/>
+                        <Route path={'/edit/:curso'}
+                               element={<EditarCurso allCadeiras={this.getCadeiras} cadeira={this.getCadeira}
+                                                     curso={this.getCurso} updateCurso={this.updateCurso}/>}/>
+
+                        <Route path={'/cadeiras'}
+                               element={<Cadeiras cadeiras={this.getCadeiras} updateCadeiras={this.updateCadeiras}/>}/>
+
                         <Route path={'*'} element={<p><NotFound/></p>}/>
                     </Routes>
                 </Router>
