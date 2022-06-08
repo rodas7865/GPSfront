@@ -102,7 +102,9 @@ class Cadeiras extends React.Component {
     handlerSubmitForm = (e) => {
         e.preventDefault()
         console.log(this.state.rows)
-        this.props.updateCadeiras(this.state.rows)
+        this.props.updateCadeiras(this.state.rows).finally(() => {
+            window.location.reload()
+        })
     }
 
     handlerOnEdit = async (e) => {
@@ -116,10 +118,7 @@ class Cadeiras extends React.Component {
 
         const row = rows[index]
         row[e.field]=e.value
-
-
     }
-
 
     render() {
         return (

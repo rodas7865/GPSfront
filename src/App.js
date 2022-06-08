@@ -62,6 +62,17 @@ class App extends React.Component {
         return await parsedData;
     }
 
+    createCurso = async (body) => {
+        const data = await fetch('/server/cursos', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
+        return data;
+    }
+
     getCadeira = async (id) => {
         const data = await fetch('/server/cadeiras/' + id);
         const parsedData = await data.json();
@@ -92,6 +103,17 @@ class App extends React.Component {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(body)
+        });
+        const parsedData = await data.json();
+        return await parsedData;
+    }
+
+    deleteCurso = async (id) => {
+        const data = await fetch('/server/cursos/' + id, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
         });
         const parsedData = await data.json();
         return await parsedData;
@@ -179,11 +201,11 @@ class App extends React.Component {
                 <Header/>
                 <Router>
                     <Routes>
-                        <Route path={'/'} element={<Cursos cursos={this.getCursos}/>}/>
+                        <Route path={'/'} element={<Cursos cursos={this.getCursos} createCurso={this.createCurso} deleteCurso={this.deleteCurso}/>}/>
                         <Route path={'/sobre'} element={<Sobre/>}/>
                         <Route path={'/:curso'}
                                element={<Curso cadeiras={this.getCadeiras} curso={this.getCurso}
-                                               email={this.sendEmail}/>}/>
+                                               email={this.sendEmail} cadeira={this.getCadeira}/>}/>
                         <Route path={'/edit/:curso'}
                                element={<EditarCurso allCadeiras={this.getCadeiras} cadeira={this.getCadeira}
                                                      curso={this.getCurso} updateCurso={this.updateCurso}/>}/>

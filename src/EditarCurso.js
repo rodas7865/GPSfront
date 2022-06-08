@@ -131,13 +131,14 @@ class EditarCurso extends React.Component {
         })
     }
 
-    handlerOpenCriarPlanoPopup = (e) => {
+    handlerOpenCriarPlanoPopup = (e,index) => {
         const planoSelecionado = {
             nome:"",
             ids:[""]
         }
         this.setState({
             [e.target.id]: true,
+            key:index,
             planoSelecionado
         })
         console.log(planoSelecionado)
@@ -152,50 +153,54 @@ class EditarCurso extends React.Component {
         })
     }
 
-
     handlerChangeForm = (e) => {
 
         let change = this.state.curso
 
-        if (e.target.id === "texto") {
-            change.texto[this.state.textoSelecionado].texto = e.target.value
-        } else if (e.target.id === "titulo") {
-            change.texto[this.state.textoSelecionado].titulo = e.target.value
-        } else if (this.state.nomeValorSelecionado === "FormulasprovasDeIngresso") {
-            change.formulas.provasDeIngresso = e.target.value
-        } else if (this.state.nomeValorSelecionado === "FormulasnotaDeCandidatura") {
-            change.formulas.notaDeCandidatura = e.target.value
-        } else if (this.state.nomeValorSelecionado === "ClassificacoesprovasDeIngresso") {
-            change.classificações.provasDeIngresso = e.target.value
-        } else if (this.state.nomeValorSelecionado === "ClassificacoesnotaDeCandidatura") {
-            change.classificações.notaDeCandidatura = e.target.value
-        } else if (this.state.nomeValorSelecionado === "Nomecadeiras") {
-            change.provasDeIngresso.cadeiras[this.state.key].nome = e.target.value
-        } else if (this.state.nomeValorSelecionado === "Avaliacaocadeiras") {
-            change.provasDeIngresso.cadeiras[this.state.key].avaliacao = e.target.value
-        } else if (this.state.nomeValorSelecionado === "ects") {
-            change.ects = e.target.value
-        } else if (this.state.nomeValorSelecionado === "duracao") {
-            change.duracao = e.target.value
-        } else if (this.state.nomeValorSelecionado === "codigoCurso") {
-            change.codigoCurso = e.target.value
-        } else if (this.state.nomeValorSelecionado === "") {
-            change.provasDeIngresso.cadeiras.push({
-                nome: "edit",
-                avaliacao: [20]
-            })
-        } else if (this.state.nomeValorSelecionado === "imagemAtiva") {
-            change.imagemAtiva = e.target.value
-        } else if (this.state.nomeValorSelecionado === "imagemInativa") {
-            change.imagemInativa = e.target.value
-        }if (e.target.id === "nomePlano") {
+        if(e.target.id === "nomePlano") {
             let planoSelecionado = this.state.planoSelecionado
             planoSelecionado.nome = e.target.value
+
             this.setState({
                 planoSelecionado
             })
+        } else {
+            if (e.target.id === "texto") {
+                change.texto[this.state.textoSelecionado].texto = e.target.value
+            } else if (e.target.id === "titulo") {
+                change.texto[this.state.textoSelecionado].titulo = e.target.value
+            } else if (this.state.nomeValorSelecionado === "FormulasprovasDeIngresso") {
+                change.formulas.provasDeIngresso = e.target.value
+            } else if (this.state.nomeValorSelecionado === "FormulasnotaDeCandidatura") {
+                change.formulas.notaDeCandidatura = e.target.value
+            } else if (this.state.nomeValorSelecionado === "ClassificacoesprovasDeIngresso") {
+                change.classificações.provasDeIngresso = e.target.value
+            } else if (this.state.nomeValorSelecionado === "ClassificacoesnotaDeCandidatura") {
+                change.classificações.notaDeCandidatura = e.target.value
+            } else if (this.state.nomeValorSelecionado === "Nomecadeiras") {
+                change.provasDeIngresso.cadeiras[this.state.key].nome = e.target.value
+            } else if (this.state.nomeValorSelecionado === "Avaliacaocadeiras") {
+                change.provasDeIngresso.cadeiras[this.state.key].avaliacao = e.target.value
+            } else if (this.state.nomeValorSelecionado === "ects") {
+                change.ects = e.target.value
+            } else if (this.state.nomeValorSelecionado === "duracao") {
+                change.duracao = e.target.value
+            } else if (this.state.nomeValorSelecionado === "codigoCurso") {
+                change.codigoCurso = e.target.value
+            } else if (this.state.nomeValorSelecionado === "") {
+                change.provasDeIngresso.cadeiras.push({
+                    nome: "edit",
+                    avaliacao: [20]
+                })
+            } else if (this.state.nomeValorSelecionado === "imagemAtiva") {
+                change.imagemAtiva = e.target.value
+            } else if (this.state.nomeValorSelecionado === "imagemInativa") {
+                change.imagemInativa = e.target.value
+            } else if (this.state.nomeValorSelecionado === "nome") {
+                change.nome = e.target.value
+            }
+            this.setState(change)
         }
-        this.setState(change)
     }
 
     handlerChangeFormNovoTexto = (e) => {
@@ -280,20 +285,18 @@ class EditarCurso extends React.Component {
         })
     }
 
-    handlerSubmitCriarPlano = (e,index) => {
+    handlerSubmitCriarPlano = (e) => {
         e.preventDefault()
         let curso =this.state.curso
 
-        console.log(curso)
-        curso.cadeiras.splice(index,0,this.state.planoSelecionado)
+        curso.cadeiras.splice(this.state.key,0,this.state.planoSelecionado)
 
+        console.log(curso)
         this.setState({
             curso
         })
 
-        this.props.updateCurso(this.props.router.params.curso, this.state.curso).finally(() => {
-            window.location.reload()
-        })
+
     }
 
     handlerSubmitEditarPlano = (e) => {
@@ -334,7 +337,7 @@ class EditarCurso extends React.Component {
                     <Tab label={'Resumo'}/>
                     <Tab label={'Ingresso/Acesso'}/>
                     <Tab label={'Plano Curricular'}/>
-                    <Tab label={'Imagens'}/>
+                    <Tab label={'Detalhes'}/>
                 </Tabs>
             </Box>
             <Box sx={{margin: '2%', paddingLeft: '5%', paddingRight: '5%', paddingBottom: '5%'}}>
@@ -575,7 +578,7 @@ class EditarCurso extends React.Component {
                                     <Tooltip title={'Adicionar Plano'}>
                                         <IconButton onClick={(e) => {
                                             e.target.id = "popupCriarPlano";
-                                            this.handlerOpenPlanoPopup(e, key)
+                                            this.handlerOpenCriarPlanoPopup(e)
                                         }}>
                                             <AddBox/>
                                         </IconButton>
@@ -657,7 +660,25 @@ class EditarCurso extends React.Component {
                                     {this.state.curso.imagemInativa}
                                     <Tooltip title={'Editar'}>
                                         <IconButton
-                                            onClick={() => this.popupEditarValor("imagemAtiva", this.state.curso.imagemInativa)}>
+                                            onClick={() => this.popupEditarValor("imagemInativa", this.state.curso.imagemInativa)}>
+                                            <Edit/>
+                                        </IconButton>
+                                    </Tooltip>
+                                </Typography>
+                            </AccordionDetails>
+                        </Accordion>
+                        <Accordion>
+                            <AccordionSummary
+                                expandIcon={<Add/>}
+                            >
+                                <Typography>Nome do Curso</Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <Typography>
+                                    {this.state.curso.nome}
+                                    <Tooltip title={'Editar'}>
+                                        <IconButton
+                                            onClick={() => this.popupEditarValor("nome", this.state.curso.nome)}>
                                             <Edit/>
                                         </IconButton>
                                     </Tooltip>
@@ -697,7 +718,7 @@ class EditarCurso extends React.Component {
                                     multiline
                                     rows={10}
                                     sx={{width: '100%'}}
-                                    helperText={'Caso queira mudar de linha use "&#10" '}
+                                    helperText={'Caso queira mudar de linha use "&#10;" '}
                                     onChange={(e) => {
                                         this.handlerChangeForm(e)
                                     }}
@@ -738,7 +759,7 @@ class EditarCurso extends React.Component {
                                     multiline
                                     rows={10}
                                     sx={{width: '100%'}}
-                                    helperText={'Caso queira mudar de linha use "&#10" '}
+                                    helperText={'Caso queira mudar de linha use "&#10;" '}
                                     onChange={(e) => {
                                         this.handlerChangeFormNovoTexto(e)
                                     }}

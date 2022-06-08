@@ -40,9 +40,20 @@ class Curso extends React.Component {
 
             curso.cadeiras.map((result) => {
                 result.ids.map((result) => {
-                    this.props.cadeiras(result).then(result => {
-                        cadeiras.push(result[0])
+
+                    this.props.cadeira(result).then(result => {
+                        const index = cadeiras.some(object=>{
+                            if (object._id===result[0]._id){
+                                return true
+                            }
+                        })
+
+                        if(!index){
+                            cadeiras.push(result[0])
+                        }
+
                     })
+
                 })
             })
 
@@ -130,7 +141,7 @@ class Curso extends React.Component {
             </Box>
             <Box sx={{margin: '2%', paddingLeft: '5%', paddingRight: '5%', paddingBottom: '5%'}}>
                 {(this.state.selected === 0) ? (this.state.texto.map((result, key) => {
-                    return <Box>
+                    return <Box sx={{paddingBottom:"2%"}}>
                         <Typography paragraph={true} fontWeight={'bold'}
                                     variant={'h5'}>{result.titulo}</Typography>
                         {result.texto.split("&#10;").map((result) => {
